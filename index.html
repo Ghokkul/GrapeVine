@@ -4,12 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Grapevine — the directory of apps looking for their next customers</title>
-<meta name="description" content="Seven independent apps, live and open to new users. Search by what you need, open the one that fits.">
+<meta name="description" content="A free directory for small software. Seven apps are live and open to new users. Browse by what you need, or fill in the form to get your own app listed — no audience required.">
+<meta name="theme-color" content="#E7E3EC">
+<meta property="og:title" content="Grapevine — apps looking for their next customers">
+<meta property="og:description" content="A free directory for small software. Browse seven live apps, or get yours listed in a minute. No audience required.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ---------- tokens ---------- */
+/* ============================================================
+   TOKENS
+   ============================================================ */
 :root{
   --bloom:#E7E3EC;
   --paper:#FCFBFD;
@@ -27,6 +33,7 @@
   --line:rgba(42,27,51,.14);
   --line-soft:rgba(42,27,51,.08);
   --muted:rgba(42,27,51,.62);
+  --danger:#A8302C;
 
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
@@ -34,6 +41,7 @@
 
   --r-sm:10px; --r-md:16px; --r-lg:24px; --r-pill:999px;
   --shell:1180px;
+  --nav-h:74px;
   --shadow:0 1px 2px rgba(42,27,51,.05),0 12px 28px -18px rgba(42,27,51,.45);
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -43,10 +51,14 @@ body{
   font-family:var(--sans); font-size:17px; line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
+body.menu-open{overflow:hidden}
 img,svg{display:block;max-width:100%}
 a{color:inherit}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2.5px solid var(--berry);outline-offset:3px;border-radius:4px}
+
+/* anchor targets clear the sticky header */
+section[id],#finder,#top{scroll-margin-top:calc(var(--nav-h) + 18px)}
 
 .shell{width:100%;max-width:var(--shell);margin:0 auto;padding:0 24px}
 .eyebrow{
@@ -60,7 +72,21 @@ h3{font-size:21px;line-height:1.25;letter-spacing:-.01em}
 p{margin:0}
 .lede{font-size:clamp(17px,1.6vw,20px);color:var(--muted);line-height:1.55}
 
-/* ---------- buttons ---------- */
+.skip-link{
+  position:absolute;left:12px;top:-60px;z-index:200;
+  background:var(--ink);color:var(--bloom);text-decoration:none;
+  padding:12px 18px;border-radius:var(--r-pill);font-size:15px;font-weight:600;
+  transition:top .18s ease
+}
+.skip-link:focus{top:12px}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
   padding:14px 24px;border-radius:var(--r-pill);border:1px solid transparent;
@@ -72,11 +98,17 @@ p{margin:0}
 .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
 .btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
 .btn-sm{padding:10px 18px;font-size:14px}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
 
-/* ---------- nav ---------- */
-.nav{position:sticky;top:0;z-index:60;background:rgba(231,227,236,.86);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s ease}
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:sticky;top:0;z-index:60;background:rgba(231,227,236,.9);
+  backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s ease
+}
 .nav.stuck{border-bottom-color:var(--line-soft)}
-.nav-in{display:flex;align-items:center;gap:14px;height:74px}
+.nav-in{display:flex;align-items:center;gap:14px;height:var(--nav-h)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:14px}
 .brand-name{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:-.02em}
 .nav-links{display:flex;gap:4px;margin-left:6px}
@@ -85,10 +117,43 @@ p{margin:0}
   color:var(--muted);transition:color .15s ease,background .15s ease
 }
 .nav-links a:hover{color:var(--ink);background:rgba(42,27,51,.06)}
+.nav-links a[aria-current="true"]{color:var(--ink);background:rgba(42,27,51,.07)}
 .nav-cta{display:flex;align-items:center;gap:8px;margin-left:auto}
-.nav-cta .login{text-decoration:none;font-size:15px;font-weight:500;padding:10px 14px}
+.nav-cta .login{text-decoration:none;font-size:15px;font-weight:500;padding:10px 14px;border-radius:var(--r-pill)}
+.nav-cta .login:hover{background:rgba(42,27,51,.06)}
 
-/* ---------- hero ---------- */
+.nav-toggle{
+  display:none;margin-left:auto;align-items:center;gap:9px;
+  background:transparent;border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:9px 16px;font-size:14.5px;font-weight:600;cursor:pointer
+}
+.nav-toggle:hover{border-color:var(--ink)}
+.nav-toggle .bars{display:grid;gap:4px}
+.nav-toggle .bars i{display:block;width:16px;height:1.8px;background:currentColor;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+.nav-toggle[aria-expanded="true"] .bars i:nth-child(1){transform:translateY(5.8px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] .bars i:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] .bars i:nth-child(3){transform:translateY(-5.8px) rotate(-45deg)}
+
+.mobile-menu{
+  display:none;position:fixed;inset:var(--nav-h) 0 0;z-index:55;
+  background:var(--bloom);padding:26px 24px 40px;overflow-y:auto
+}
+.mobile-menu.open{display:block}
+.mobile-menu a{
+  display:flex;align-items:center;justify-content:space-between;
+  text-decoration:none;font-family:var(--serif);font-size:24px;font-weight:600;
+  padding:20px 0;border-bottom:1px solid var(--line-soft)
+}
+.mobile-menu a span{font-family:var(--mono);font-size:11.5px;color:var(--muted);font-weight:400;letter-spacing:.08em;text-transform:uppercase}
+.mobile-menu .btn{width:100%;margin-top:28px;padding:17px 24px;font-size:16px}
+.mobile-menu .m-mail{
+  display:block;margin-top:22px;font-family:var(--mono);font-size:13px;
+  color:var(--muted);text-align:center;border:0;padding:0
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
 .hero{padding:76px 0 30px;text-align:center}
 .hero h1 .accent{
   font-style:italic;color:var(--berry);
@@ -99,29 +164,44 @@ p{margin:0}
 .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:32px}
 .note{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:16px}
 
-/* ---------- signature: live finder ---------- */
+/* ============================================================
+   DIRECTORY FINDER
+   ============================================================ */
 .finder{margin-top:52px;text-align:left}
+.finder-intro{
+  display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  margin-bottom:14px
+}
+.finder-intro h2{font-size:clamp(22px,2.4vw,27px)}
+.finder-intro p{font-size:14.5px;color:var(--muted)}
 .finder-card{
   background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--r-lg);
   box-shadow:var(--shadow);overflow:hidden
 }
 .finder-bar{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line-soft)}
-.finder-bar svg{flex:none;color:var(--berry-2)}
+.finder-bar > svg{flex:none;color:var(--berry-2)}
 #q{flex:1;border:0;background:transparent;font-size:17px;padding:8px 0;min-width:0}
 #q::placeholder{color:rgba(42,27,51,.42)}
+#q::-webkit-search-cancel-button{display:none}
+.clear-q{
+  display:none;flex:none;background:transparent;border:1px solid var(--line);
+  border-radius:var(--r-pill);padding:6px 12px;font-size:13px;color:var(--muted);cursor:pointer
+}
+.clear-q:hover{border-color:var(--ink);color:var(--ink)}
+.clear-q.show{display:inline-flex;align-items:center;gap:6px}
 .hint{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
 .hint kbd{background:rgba(42,27,51,.07);border-radius:5px;padding:3px 6px}
 
 .facets{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line-soft);align-items:center}
 .chip{
   border:1px solid var(--line);background:transparent;border-radius:var(--r-pill);
-  padding:7px 15px;font-size:13.5px;font-weight:500;cursor:pointer;
+  padding:8px 15px;font-size:13.5px;font-weight:500;cursor:pointer;
   transition:background .15s ease,color .15s ease,border-color .15s ease
 }
 .chip:hover{border-color:var(--mauve)}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bloom)}
 .facet-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:4px}
-#sort{margin-left:auto;border:1px solid var(--line);border-radius:var(--r-pill);padding:7px 12px;font-size:13.5px;background:transparent;cursor:pointer}
+#sort{margin-left:auto;border:1px solid var(--line);border-radius:var(--r-pill);padding:8px 12px;font-size:13.5px;background:transparent;cursor:pointer}
 
 .results{padding:8px}
 .row{
@@ -132,7 +212,7 @@ p{margin:0}
 .row + .row{border-top:1px solid var(--line-soft)}
 .avatar{
   width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
-  font-family:var(--serif);font-size:20px;font-weight:700;color:#fff
+  font-family:var(--serif);font-size:20px;font-weight:700;color:#fff;flex:none
 }
 .co-name{font-weight:600;letter-spacing:-.01em;font-size:17px}
 .co-meta{font-size:14px;color:var(--muted)}
@@ -144,7 +224,7 @@ p{margin:0}
 .tag.hit{background:var(--berry);color:#fff}
 .open-link{
   display:inline-flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap;
-  font-size:14px;font-weight:600;padding:9px 16px;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;padding:11px 18px;border-radius:var(--r-pill);
   border:1px solid var(--line);transition:background .15s ease,color .15s ease,border-color .15s ease
 }
 .open-link:hover{background:var(--ink);border-color:var(--ink);color:var(--bloom)}
@@ -152,6 +232,7 @@ p{margin:0}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--leaf);flex:none}
 .empty{padding:52px 20px;text-align:center;color:var(--muted)}
 .empty strong{display:block;color:var(--ink);font-family:var(--serif);font-size:20px;margin-bottom:6px}
+.empty .btn{margin-top:20px}
 .finder-foot{
   display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
   padding:14px 20px;border-top:1px solid var(--line-soft);background:rgba(231,227,236,.55)
@@ -159,17 +240,23 @@ p{margin:0}
 .count{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 .count b{color:var(--ink)}
 
-/* ---------- marquee ---------- */
+/* ============================================================
+   MARQUEE
+   ============================================================ */
 .proof{padding:56px 0 12px;text-align:center}
 .proof p{font-size:14px;color:var(--muted)}
 .marquee{margin-top:22px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 .track{display:flex;gap:52px;width:max-content;animation:slide 38s linear infinite}
 .track a{font-family:var(--serif);font-size:23px;font-weight:600;color:rgba(42,27,51,.36);white-space:nowrap;text-decoration:none;transition:color .18s ease}
 .track a:hover{color:var(--berry)}
+.marquee:hover .track{animation-play-state:paused}
 @keyframes slide{to{transform:translateX(-50%)}}
 
-/* ---------- sections ---------- */
+/* ============================================================
+   SECTIONS
+   ============================================================ */
 .section{padding:96px 0}
+.section-tight{padding-top:0}
 .section-head{max-width:660px;margin-bottom:56px}
 .section-head .lede{margin-top:18px}
 
@@ -204,6 +291,94 @@ p{margin:0}
 .who b{display:block;font-size:15.5px;text-align:left}
 .who span{font-size:13.5px;color:var(--muted);text-align:left;display:block}
 
+/* ============================================================
+   GET LISTED — ladder + form
+   ============================================================ */
+.list-wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:start}
+
+.ladder{display:grid;gap:0;margin-top:4px}
+.rung{display:grid;grid-template-columns:34px 1fr;gap:16px;padding:0 0 26px;position:relative}
+.rung:last-child{padding-bottom:0}
+.rung::before{
+  content:"";position:absolute;left:16.5px;top:34px;bottom:0;width:1.5px;
+  background:linear-gradient(var(--haze),rgba(203,171,189,.25))
+}
+.rung:last-child::before{display:none}
+.rung-dot{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--paper);border:1.5px solid var(--haze);
+  font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--berry);
+  position:relative;z-index:1
+}
+.rung h3{font-size:18px;margin-bottom:6px}
+.rung p{font-size:15px;color:var(--muted)}
+.rung a{color:var(--berry);text-decoration-thickness:1px;text-underline-offset:3px}
+
+.reassure{
+  margin-top:32px;background:rgba(60,107,74,.07);border:1px solid rgba(60,107,74,.2);
+  border-radius:var(--r-md);padding:20px 22px
+}
+.reassure h3{font-size:16.5px;font-family:var(--sans);font-weight:600;margin-bottom:8px;display:flex;gap:9px;align-items:center}
+.reassure h3 svg{flex:none;color:var(--leaf)}
+.reassure p{font-size:14.5px;color:var(--muted)}
+
+.form-card{
+  background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--r-lg);
+  padding:36px;box-shadow:var(--shadow)
+}
+.form-card > h3{font-size:23px;margin-bottom:8px}
+.form-card > .sub{font-size:14.5px;color:var(--muted);margin-bottom:28px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field{display:grid;gap:7px;margin-bottom:18px}
+.field label{font-size:14px;font-weight:600}
+.field .opt{font-weight:400;color:var(--muted);font-size:13px}
+.field .help{font-size:13px;color:var(--muted)}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--bloom);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:13px 14px;font-size:15.5px;transition:border-color .15s ease,background .15s ease
+}
+.field textarea{resize:vertical;min-height:88px;line-height:1.5}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--mauve)}
+.field input:focus,.field select:focus,.field textarea:focus{background:#fff;border-color:var(--berry)}
+.field input[aria-invalid="true"],.field textarea[aria-invalid="true"],.field select[aria-invalid="true"]{border-color:var(--danger);background:rgba(168,48,44,.04)}
+.err{font-size:13px;color:var(--danger);font-weight:500;display:none}
+.err.show{display:block}
+.counter{font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:right}
+.counter.over{color:var(--danger)}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;align-items:center}
+.form-foot{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:16px;line-height:1.7}
+.form-foot a{color:var(--berry)}
+
+.honey{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.spinner{
+  width:15px;height:15px;border-radius:50%;flex:none;
+  border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
+  animation:spin .7s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.form-status{
+  display:none;margin-top:22px;border-radius:var(--r-md);padding:20px 22px;font-size:15px;
+  background:rgba(60,107,74,.08);border:1px solid rgba(60,107,74,.24)
+}
+.form-status.show{display:block}
+.form-status strong{display:block;font-family:var(--serif);font-size:19px;margin-bottom:7px}
+.form-status p{color:var(--muted);font-size:14.5px}
+.form-status .mini{
+  display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-size:13.5px;font-weight:600;
+  background:transparent;border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:9px 16px;cursor:pointer;text-decoration:none
+}
+.form-status .mini:hover{border-color:var(--ink)}
+.form-status pre{
+  margin:14px 0 0;background:var(--bloom);border:1px solid var(--line-soft);border-radius:var(--r-sm);
+  padding:16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;
+  max-height:210px;overflow:auto;color:var(--ink)
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
 details{border-top:1px solid var(--line);padding:4px 0}
 details:last-of-type{border-bottom:1px solid var(--line)}
 summary{
@@ -217,24 +392,33 @@ summary::after{
 }
 details[open] summary::after{content:"–"}
 details p{padding:0 60px 26px 0;color:var(--muted)}
+details p a{color:var(--berry)}
 
+/* ============================================================
+   CTA
+   ============================================================ */
 .cta{
   background:var(--ink);color:var(--bloom);border-radius:var(--r-lg);
   padding:80px 40px;text-align:center;position:relative;overflow:hidden
 }
-.cta h2{color:var(--paper);max-width:16ch;margin:0 auto}
-.cta .lede{color:rgba(231,227,236,.72);max-width:520px;margin:22px auto 0}
-.cta .hero-actions{margin-top:34px}
+.cta h2{color:var(--paper);max-width:20ch;margin:0 auto;position:relative}
+.cta .lede{color:rgba(231,227,236,.72);max-width:520px;margin:22px auto 0;position:relative}
+.cta .hero-actions{margin-top:34px;position:relative}
 .cta .btn-primary{background:var(--berry)}
 .cta .btn-primary:hover{background:var(--berry-2)}
 .cta .btn-ghost{border-color:rgba(231,227,236,.34);color:var(--bloom)}
 .cta .btn-ghost:hover{border-color:var(--bloom)}
-.cta .note{color:rgba(231,227,236,.55)}
+.cta .note{color:rgba(231,227,236,.55);position:relative}
 .cta-vine{position:absolute;inset:auto -60px -70px auto;opacity:.16;pointer-events:none}
 
+/* ============================================================
+   FOOTER + BACK TO TOP
+   ============================================================ */
 footer{padding:80px 0 40px}
 .foot-grid{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px}
 .foot-brand p{margin-top:14px;font-size:14.5px;color:var(--muted);max-width:30ch}
+.foot-brand .mail{display:inline-block;margin-top:16px;font-family:var(--mono);font-size:13px;color:var(--berry);text-decoration:none}
+.foot-brand .mail:hover{text-decoration:underline}
 .foot h4{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 16px;font-weight:500}
 .foot ul{list-style:none;margin:0;padding:0;display:grid;gap:11px}
 .foot a{text-decoration:none;font-size:14.5px;color:var(--muted)}
@@ -245,13 +429,33 @@ footer{padding:80px 0 40px}
   font-family:var(--mono);font-size:12px;color:var(--muted)
 }
 
-/* ---------- reveal ---------- */
+.to-top{
+  position:fixed;right:22px;bottom:22px;z-index:50;
+  width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ink);color:var(--bloom);border:0;cursor:pointer;
+  opacity:0;visibility:hidden;transform:translateY(10px);
+  transition:opacity .2s ease,transform .2s ease,visibility .2s ease;
+  box-shadow:0 8px 20px -10px rgba(42,27,51,.6)
+}
+.to-top.show{opacity:1;visibility:visible;transform:none}
+.to-top:hover{background:var(--wine)}
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
 .rise{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
 .rise.in{opacity:1;transform:none}
 
-/* ---------- responsive ---------- */
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:980px){
+  .list-wrap{grid-template-columns:1fr;gap:34px}
+  .form-card{padding:30px 26px}
+}
 @media(max-width:900px){
-  .nav-links{display:none}
+  .nav-links,.nav-cta{display:none}
+  .nav-toggle{display:inline-flex}
   .stats{grid-template-columns:repeat(2,1fr)}
   .foot-grid{grid-template-columns:1fr 1fr}
   .row{grid-template-columns:46px 1fr;gap:14px}
@@ -259,10 +463,12 @@ footer{padding:80px 0 40px}
   .row .go{grid-column:1/-1}
   .open-link{width:100%}
   .section{padding:72px 0}
+  .section-tight{padding-top:0}
 }
 @media(max-width:620px){
   body{font-size:16px}
   .hero{padding:52px 0 20px}
+  .hero-actions .btn{width:100%}
   .step{grid-template-columns:1fr;gap:12px;padding:26px}
   .stats{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
@@ -270,6 +476,9 @@ footer{padding:80px 0 40px}
   .cta{padding:56px 24px}
   .quote-solo{padding:38px 24px}
   .hint{display:none}
+  .grid-2{grid-template-columns:1fr;gap:0}
+  .form-actions .btn{width:100%}
+  .to-top{right:14px;bottom:14px}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
@@ -279,6 +488,8 @@ footer{padding:80px 0 40px}
 </style>
 </head>
 <body>
+
+<a class="skip-link" href="#finder">Skip to the directory</a>
 
 <!-- ============ NAV ============ -->
 <header class="nav" id="nav">
@@ -297,49 +508,65 @@ footer{padding:80px 0 40px}
       </svg>
       <span class="brand-name">Grapevine</span>
     </a>
-    <nav class="nav-links" aria-label="Main">
-      <a href="#finder">Directory</a>
+
+    <nav class="nav-links" id="navLinks" aria-label="Main">
+      <a href="#finder">Browse apps</a>
       <a href="#how">How it works</a>
-      <a href="#proof">Maker</a>
+      <a href="#list">Get listed</a>
       <a href="#faq">FAQ</a>
     </nav>
+
     <div class="nav-cta">
       <a class="login" href="#finder">Browse</a>
-      <a class="btn btn-primary btn-sm" href="#finder">Find an app</a>
+      <a class="btn btn-primary btn-sm" href="#list">Get your app listed</a>
     </div>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu">
+      <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      Menu
+    </button>
   </div>
 </header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#finder">Browse apps <span>7 live</span></a>
+  <a href="#how">How it works <span>3 steps</span></a>
+  <a href="#list">Get listed <span>Free</span></a>
+  <a href="#faq">FAQ <span>5 answers</span></a>
+  <a class="btn btn-primary" href="#list">Get your app listed</a>
+  <a class="m-mail" href="mailto:helloghokkul@gmail.com">helloghokkul@gmail.com</a>
+</div>
 
 <main id="top">
 
   <!-- ============ HERO ============ -->
   <section class="hero">
     <div class="shell">
-      <p class="eyebrow">SaaS app customer directory</p>
-      <!-- Alternates, if you want to swap:
-           · Looking for customers? <span class="accent">Your software just found them</span>.
-           · Word of mouth, <span class="accent">now searchable</span>.
-           · Heard it through the grapevine? <span class="accent">Now you can search it</span>.
-           · Good software spreads <span class="accent">one recommendation at a time</span>. -->
+      <p class="eyebrow">Free directory for small software</p>
       <h1>Looking for customers for your software?<br><span class="accent">You found the right place</span>.</h1>
-      <p class="lede">Grapevine puts small software in front of the people already searching for it. Seven apps are listed so far — browse them below, or add yours to the vine.</p>
+      <p class="lede">Grapevine puts small software in front of the people already searching for it. Seven apps are listed so far. Browse them below, or fill in the form to add yours — you don't need an audience to get in.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#cta">List your app</a>
-        <a class="btn btn-ghost" href="#finder">Browse the seven</a>
+        <a class="btn btn-primary" href="#list">Get your app listed</a>
+        <a class="btn btn-ghost" href="#finder">Browse the seven apps</a>
       </div>
       <p class="note">Free to list · free to browse · no account needed</p>
 
       <!-- signature element: working finder -->
       <div class="finder" id="finder">
+        <div class="finder-intro">
+          <h2>The directory</h2>
+          <p>Type what you need, or pick a category. Every app opens in one click.</p>
+        </div>
         <div class="finder-card">
           <div class="finder-bar">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input id="q" type="search" placeholder="What do you need? — try logs, notes, security, writing…" autocomplete="off" aria-label="Search the app directory">
-            <span class="hint">Press <kbd>/</kbd> to focus</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="q" type="search" placeholder="What do you need? Try logs, notes, security, writing…" autocomplete="off" aria-label="Search the app directory">
+            <button class="clear-q" id="clearQ" type="button">Clear</button>
+            <span class="hint">Press <kbd>/</kbd> to search</span>
           </div>
 
           <div class="facets" id="facets">
-            <span class="facet-label">Category</span>
+            <span class="facet-label" id="catLabel">Category</span>
             <button class="chip" aria-pressed="true" data-cat="all">All 7</button>
             <button class="chip" aria-pressed="false" data-cat="Security">Security</button>
             <button class="chip" aria-pressed="false" data-cat="Productivity">Productivity</button>
@@ -357,7 +584,7 @@ footer{padding:80px 0 40px}
 
           <div class="finder-foot">
             <span class="count" id="count"></span>
-            <a class="btn btn-primary btn-sm" href="#cta">List your app</a>
+            <a class="btn btn-primary btn-sm" href="#list">Get your app listed</a>
           </div>
         </div>
       </div>
@@ -366,19 +593,19 @@ footer{padding:80px 0 40px}
 
   <!-- ============ PROOF MARQUEE ============ -->
   <section class="proof" id="proof">
-    <div class="shell"><p>Sales and partnerships with these 7 apps listed</p></div>
+    <div class="shell"><p>Live in the directory right now</p></div>
     <div class="marquee">
       <div class="track" id="track"></div>
     </div>
   </section>
 
-  <!-- ============ HOW ============ -->
+  <!-- ============ HOW IT WORKS ============ -->
   <section class="section" id="how">
     <div class="shell">
       <div class="section-head rise">
-        <p class="eyebrow">Search → open → join</p>
+        <p class="eyebrow">For people looking for software</p>
         <h2>Three steps from a problem to a product that fixes it.</h2>
-        <p class="lede">No pitch decks, no sales calls, no waitlist forms. Each app in the directory is finished, hosted, and taking users today.</p>
+        <p class="lede">No pitch decks, no sales calls, no waitlist forms. Every app in the directory is finished, hosted, and taking users today.</p>
       </div>
 
       <div class="steps">
@@ -386,7 +613,7 @@ footer{padding:80px 0 40px}
           <div class="step-num">01</div>
           <div>
             <h3>Search by the job, not the category</h3>
-            <p>Type what you're actually trying to do — sort my notes, read my logs, protect my agents — and the directory filters live. Matching keywords light up on the app that handles them.</p>
+            <p>Type what you're actually trying to do — sort my notes, read my logs, protect my agents — and the directory filters as you type. Matching words light up on the app that handles them.</p>
             <div class="step-extra"><span class="pill">7 apps</span><span class="pill">6 categories</span><span class="pill">Live search</span></div>
           </div>
         </article>
@@ -404,8 +631,8 @@ footer{padding:80px 0 40px}
           <div class="step-num">03</div>
           <div>
             <h3>Become one of the early users</h3>
-            <p>These apps are new and the maker is still building on feedback. Early users get their requests read and shipped — the part that stops being true once a product has fifty thousand accounts.</p>
-            <div class="step-extra"><span class="pill">Open to new users</span><span class="pill">Feedback goes to the maker</span></div>
+            <p>These apps are new and their makers are still building on feedback. Early users get their requests read and shipped — the part that stops being true once a product has fifty thousand accounts.</p>
+            <div class="step-extra"><span class="pill">Open to new users</span><span class="pill">Feedback reaches the maker</span></div>
           </div>
         </article>
       </div>
@@ -413,39 +640,183 @@ footer{padding:80px 0 40px}
   </section>
 
   <!-- ============ STATS ============ -->
-  <section class="section" style="padding-top:0">
+  <section class="section section-tight">
     <div class="shell">
       <div class="stats rise">
         <div class="stat"><b>7</b><span>apps live in the directory</span></div>
         <div class="stat"><b>6</b><span>categories, from security to wellbeing</span></div>
-        <div class="stat"><b>1</b><span>maker behind all of them</span></div>
+        <div class="stat"><b>0</b><span>followers needed to get listed</span></div>
         <div class="stat"><b>0</b><span>sales calls to try any of it</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ WALL OF LOVE ============ -->
-  <section class="section" style="padding-top:0">
+  <!-- ============ MAKER QUOTE ============ -->
+  <section class="section section-tight">
     <div class="shell">
-      <div class="section-head rise" style="max-width:660px">
-        <p class="eyebrow">Wall of love</p>
-        <h2>From the person who built them.</h2>
+      <div class="section-head rise">
+        <p class="eyebrow">Why this exists</p>
+        <h2>From the person who built it.</h2>
       </div>
       <div class="quote-solo rise">
-        <blockquote>“I built grapevine because I wanted a place where everyone can find customers for there products for free.”</blockquote>
+        <blockquote>“I built Grapevine because I wanted a place where anyone can find customers for their product, for free.”</blockquote>
         <div class="who">
           <div class="avatar" style="background:#8A2B52">G</div>
           <div>
             <b>Ghokkul M</b>
-            <span>Maker — all seven apps</span>
+            <span>Founder, Grapevine</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ============ GET LISTED ============ -->
+  <section class="section section-tight" id="list">
+    <div class="shell">
+      <div class="section-head rise">
+        <p class="eyebrow">For makers</p>
+        <h2>Get your app listed.</h2>
+        <p class="lede">Fill in the form and it goes straight to helloghokkul@gmail.com. You don't need a big audience to be accepted — your app gets listed as looking for customers, and you watch the audience come to you.</p>
+      </div>
+
+      <div class="list-wrap rise">
+        <!-- what happens, in order -->
+        <div>
+          <div class="ladder">
+            <div class="rung">
+              <div class="rung-dot">1</div>
+              <div>
+                <h3>Fill in the form</h3>
+                <p>Six short fields. The one that matters most is the single sentence describing your app — that's the text the directory search runs on.</p>
+              </div>
+            </div>
+            <div class="rung">
+              <div class="rung-dot">2</div>
+              <div>
+                <h3>Press send — it lands in our inbox</h3>
+                <p>Your details go straight to helloghokkul@gmail.com. No account, no sign-up, nothing to install. Prefer to write it yourself? <a href="mailto:helloghokkul@gmail.com?subject=Grapevine%20listing%20request">Email us directly</a>.</p>
+              </div>
+            </div>
+            <div class="rung">
+              <div class="rung-dot">3</div>
+              <div>
+                <h3>You get added</h3>
+                <p>We reply within a few days. If your app works and the link is live, it goes on the vine — no audience minimum, no follower count, no questions asked.</p>
+              </div>
+            </div>
+            <div class="rung">
+              <div class="rung-dot">4</div>
+              <div>
+                <h3>Your app shows as looking for customers</h3>
+                <p>It appears in the directory with an “Open to new users” badge, findable by everyone searching for what you built. Then you watch the audience grow.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="reassure">
+            <h3>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              No audience required
+            </h3>
+            <p>Zero users is fine. Zero followers is fine. Launched yesterday is fine. Grapevine exists for apps that are built but haven't been found yet — that's the whole point of it.</p>
+          </div>
+        </div>
+
+        <!-- the form -->
+        <div class="form-card">
+          <h3>Listing request</h3>
+          <p class="sub">Free, and takes about a minute. Fields marked <span class="opt">optional</span> can be left blank.</p>
+
+          <form id="listForm" novalidate>
+            <div class="grid-2">
+              <div class="field">
+                <label for="f-name">Your name</label>
+                <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Ada Lovelace" aria-describedby="e-name">
+                <p class="err" id="e-name">Add your name so we know who to reply to.</p>
+              </div>
+              <div class="field">
+                <label for="f-email">Your email</label>
+                <input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="e-email">
+                <p class="err" id="e-email">Add an email address we can reach you at.</p>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="f-app">App name</label>
+                <input id="f-app" name="app" type="text" placeholder="Brain Dump" aria-describedby="e-app">
+                <p class="err" id="e-app">Tell us what your app is called.</p>
+              </div>
+              <div class="field">
+                <label for="f-url">Link to your app</label>
+                <input id="f-url" name="url" type="url" inputmode="url" placeholder="https://yourapp.com" aria-describedby="e-url h-url">
+                <p class="help" id="h-url">Must be live — we open it before listing.</p>
+                <p class="err" id="e-url">Add the full link, starting with https://</p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-cat">Category</label>
+              <select id="f-cat" name="category" aria-describedby="e-cat">
+                <option value="">Choose the closest fit…</option>
+                <option>Security</option>
+                <option>Productivity</option>
+                <option>Writing</option>
+                <option>Branding</option>
+                <option>Wellbeing</option>
+                <option>Developer tools</option>
+                <option>Design</option>
+                <option>Finance</option>
+                <option>Education</option>
+                <option>Something else</option>
+              </select>
+              <p class="err" id="e-cat">Pick a category so people can filter to your app.</p>
+            </div>
+
+            <div class="field">
+              <label for="f-desc">What it does, in one sentence</label>
+              <textarea id="f-desc" name="description" maxlength="160" placeholder="Capture any thought, and AI files it where it belongs." aria-describedby="h-desc e-desc counter"></textarea>
+              <p class="help" id="h-desc">This is the line that appears in the directory, and the text search runs on. Plain and specific beats clever.</p>
+              <p class="counter" id="counter">0 / 160</p>
+              <p class="err" id="e-desc">Describe your app in a sentence — at least a few words.</p>
+            </div>
+
+            <div class="field">
+              <label for="f-tags">Search keywords <span class="opt">optional</span></label>
+              <input id="f-tags" name="tags" type="text" placeholder="notes, capture, organise" aria-describedby="h-tags">
+              <p class="help" id="h-tags">Three or four words people might type when looking for your app.</p>
+            </div>
+
+            <div class="field">
+              <label for="f-notes">Anything else <span class="opt">optional</span></label>
+              <textarea id="f-notes" name="notes" placeholder="Pricing, who it's for, what stage you're at…"></textarea>
+            </div>
+
+            <!-- spam trap: real people never see this, bots fill it in -->
+            <div class="honey" aria-hidden="true">
+              <label for="f-honey">Leave this field empty</label>
+              <input id="f-honey" name="_honey" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit" id="submitBtn">Send listing request</button>
+              <button class="btn btn-ghost" type="button" id="copyBtn">Copy details instead</button>
+            </div>
+            <p class="form-foot">
+              Goes straight to helloghokkul@gmail.com. Your email is used to reply, nothing else.<br>
+              Trouble sending? Write to <a href="mailto:helloghokkul@gmail.com">helloghokkul@gmail.com</a>.
+            </p>
+          </form>
+
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ FAQ ============ -->
-  <section class="section" id="faq" style="padding-top:0">
+  <section class="section section-tight" id="faq">
     <div class="shell">
       <div class="section-head rise">
         <p class="eyebrow">Questions</p>
@@ -453,31 +824,35 @@ footer{padding:80px 0 40px}
       </div>
       <div class="rise">
         <details open>
-          <summary>What is actually in the directory?</summary>
-          <p>Seven working apps: Brandofme.ai, Soul Weather Station, Axiom, Brain Dump, tracelight.ai, Immune and Cipherscope. Each one is hosted and open right now — the links in the list go straight to the live product.</p>
+          <summary>Do I need an audience to get listed?</summary>
+          <p>No. There's no follower count, no user minimum, no traffic requirement. If your app is built and the link works, it can go in the directory. Grapevine is specifically for products that exist but haven't been found yet.</p>
         </details>
         <details>
-          <summary>Does it cost anything to try them?</summary>
-          <p>Browsing Grapevine is free and nothing here asks for a card before you've used the product. Pricing, where it exists, lives on each app's own site.</p>
+          <summary>How do I get my app listed?</summary>
+          <p>Fill in the form in the <a href="#list">Get listed</a> section. It sends your details to helloghokkul@gmail.com, and we reply within a few days. You can also email that address directly if you'd rather write it yourself.</p>
         </details>
         <details>
-          <summary>Who made these?</summary>
-          <p>These starter apps are built by Ninth Sun Studios partnered with GrapeVine. If you want your app to be featured here contact helloghokkul@gmail.com.</p>
+          <summary>What's actually in the directory?</summary>
+          <p>Seven working apps: Brandofme.ai, Soul Weather Station, Axiom, Brain Dump, tracelight.ai, Immune and Cipherscope. Each one is hosted and open right now — the links go straight to the live product.</p>
         </details>
         <details>
-          <summary>What does "looking for customers" mean here?</summary>
-          <p>These are new products past the build stage and short on users. Signing up early means your feedback shapes what ships next, which is the trade — you get in first, the app gets better.</p>
+          <summary>Does it cost anything?</summary>
+          <p>Listing is free and browsing is free. Nothing here asks for a card before you've used a product. Pricing, where it exists, lives on each app's own site.</p>
         </details>
         <details>
-          <summary>Can I list my own app?</summary>
-          <p>The directory is small on purpose, but it's growing. Get in touch and tell us what your app does in one sentence — that sentence is what the search runs on.</p>
+          <summary>What does “looking for customers” mean here?</summary>
+          <p>Every listed app is past the build stage and short on users. Signing up early means your feedback shapes what ships next — you get in first, the app gets better.</p>
+        </details>
+        <details>
+          <summary>Who runs Grapevine?</summary>
+          <p>Grapevine is run by Ghokkul M. The seven starter apps were built by Ninth Sun Studios in partnership with Grapevine. For anything not answered here, write to helloghokkul@gmail.com.</p>
         </details>
       </div>
     </div>
   </section>
 
   <!-- ============ CTA ============ -->
-  <section class="section" id="cta" style="padding-top:0">
+  <section class="section section-tight" id="cta">
     <div class="shell">
       <div class="cta rise">
         <svg class="cta-vine" width="320" height="320" viewBox="0 0 30 34" fill="none" aria-hidden="true">
@@ -485,11 +860,11 @@ footer{padding:80px 0 40px}
           <circle cx="17.4" cy="19.4" r="4.1" fill="#AB6E89"/><circle cx="10.6" cy="23" r="4.1" fill="#9B4C6E"/>
           <circle cx="15.2" cy="28.4" r="4.1" fill="#8A2B52"/>
         </svg>
-        <h2>Feature your new product here or find a product that solves your solution.</h2>
-        <p class="lede">Come join grapevine if you have a new product to share send it to us at helloghokkul@gmail.com and we will put it in. No questions ask.</p>
+        <h2>List the thing you built, or find the thing you need.</h2>
+        <p class="lede">Two minutes either way. Fill in the form and your app joins the vine — no audience required, no questions asked.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#finder">Browse the directory</a>
-          <a class="btn btn-ghost" href="#faq">List your app</a>
+          <a class="btn btn-primary" href="#list">Get your app listed</a>
+          <a class="btn btn-ghost" href="#finder">Browse the directory</a>
         </div>
         <p class="note">7 apps · free to browse · no account needed</p>
       </div>
@@ -511,7 +886,8 @@ footer{padding:80px 0 40px}
           </svg>
           <span class="brand-name" style="font-size:22px">Grapevine</span>
         </a>
-        <p>The customer directory for small software. Seven apps, open to new users.</p>
+        <p>The customer directory for small software. Free to list, no audience required.</p>
+        <a class="mail" href="mailto:helloghokkul@gmail.com">helloghokkul@gmail.com</a>
       </div>
       <div class="foot">
         <h4>The apps</h4>
@@ -532,7 +908,12 @@ footer{padding:80px 0 40px}
       </div>
       <div class="foot">
         <h4>Grapevine</h4>
-        <ul><li><a href="#how">How it works</a></li><li><a href="#faq">FAQ</a></li><li><a href="#cta">List your app</a></li><li><a href="#proof">The maker</a></li></ul>
+        <ul>
+          <li><a href="#finder">Browse apps</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#list">Get listed</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
       </div>
     </div>
     <div class="foot-base">
@@ -542,78 +923,65 @@ footer{padding:80px 0 40px}
   </div>
 </footer>
 
+<button class="to-top" id="toTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
 <script>
-/* ---------- the seven apps ---------- */
+/* ============================================================
+   THE APPS  —  add a new object here when a listing is accepted
+   ============================================================ */
 const APPS = [
-  {
-    n:"Brandofme.ai",
-    t:"Turn your name into a brand",
-    cat:"Branding",
-    url:"https://brandofme.ai/",
-    tags:["personal brand","naming","identity"],
-    color:"#8A2B52"
-  },
-  {
-    n:"Soul Weather Station",
-    t:"A daily forecast for how you're doing",
-    cat:"Wellbeing",
-    url:"https://ghokkul.github.io/Soul-Weather/",
-    tags:["mood","journal","daily check-in"],
-    color:"#3C6B4A"
-  },
-  {
-    n:"Axiom ∎",
-    t:"AI article generator",
-    cat:"Writing",
-    url:"https://ghokkul.github.io/Axiom-AI-Article-Generator/",
-    tags:["writing","articles","drafting"],
-    color:"#9B4C6E"
-  },
-  {
-    n:"Brain Dump",
-    t:"Capture. AI sorts.",
-    cat:"Productivity",
-    url:"https://ghokkul.github.io/BrainDump/",
-    tags:["notes","capture","organize"],
-    color:"#AB6E89"
-  },
-  {
-    n:"tracelight.ai",
-    t:"The AI analyst for your logs",
-    cat:"Productivity",
-    url:"https://ghokkul.github.io/tracelight.ai/#demo",
-    tags:["logs","debugging","observability"],
-    color:"#6D1B33"
-  },
-  {
-    n:"Immune",
-    t:"The firewall for your AI agents",
-    cat:"Security",
-    url:"https://ghokkul.github.io/immune.ai/",
-    tags:["ai agents","firewall","guardrails"],
-    color:"#4E1B33"
-  },
-  {
-    n:"Cipherscope",
-    t:"The cybersecurity browser",
-    cat:"Security",
-    url:"https://ghokkul.github.io/cipherscope-cybersecurity-browser/",
-    tags:["browsing","privacy","threat scan"],
-    color:"#789583"
-  }
+  { n:"Brandofme.ai", t:"Turn your name into a brand", cat:"Branding",
+    url:"https://brandofme.ai/", tags:["personal brand","naming","identity"], color:"#8A2B52" },
+  { n:"Soul Weather Station", t:"A daily forecast for how you're doing", cat:"Wellbeing",
+    url:"https://ghokkul.github.io/Soul-Weather/", tags:["mood","journal","daily check-in"], color:"#3C6B4A" },
+  { n:"Axiom", t:"AI article generator", cat:"Writing",
+    url:"https://ghokkul.github.io/Axiom-AI-Article-Generator/", tags:["writing","articles","drafting"], color:"#9B4C6E" },
+  { n:"Brain Dump", t:"Capture anything. AI sorts it.", cat:"Productivity",
+    url:"https://ghokkul.github.io/BrainDump/", tags:["notes","capture","organize"], color:"#AB6E89" },
+  { n:"tracelight.ai", t:"The AI analyst for your logs", cat:"Productivity",
+    url:"https://ghokkul.github.io/tracelight.ai/#demo", tags:["logs","debugging","observability"], color:"#6D1B33" },
+  { n:"Immune", t:"The firewall for your AI agents", cat:"Security",
+    url:"https://ghokkul.github.io/immune.ai/", tags:["ai agents","firewall","guardrails"], color:"#4E1B33" },
+  { n:"Cipherscope", t:"The cybersecurity browser", cat:"Security",
+    url:"https://ghokkul.github.io/cipherscope-cybersecurity-browser/", tags:["browsing","privacy","threat scan"], color:"#789583" }
 ];
 
-const q = document.getElementById("q");
+/* ============================================================
+   WHERE SUBMISSIONS GO
+   ------------------------------------------------------------
+   Listing requests POST to FormSubmit, which forwards them to
+   the inbox below. No account, no API key, no server.
+
+   ONE-TIME SETUP — do this before sharing the site:
+   1. Open the live page and send yourself a test listing.
+   2. FormSubmit emails helloghokkul@gmail.com asking you to
+      confirm. Click "Activate Form" in that email.
+   3. Done. Every submission from now on arrives automatically.
+   Until step 2 is done, submissions will NOT be delivered.
+
+   To hide the address from spam bots, replace the email in
+   FORM_ENDPOINT with the random token FormSubmit sends you
+   when you activate (e.g. .../ajax/a1b2c3d4e5).
+   ============================================================ */
+const LISTING_EMAIL = "helloghokkul@gmail.com";
+const FORM_ENDPOINT = "https://formsubmit.co/ajax/helloghokkul@gmail.com";
+
+/* ---------- directory ---------- */
+const q       = document.getElementById("q");
+const clearQ  = document.getElementById("clearQ");
 const results = document.getElementById("results");
-const count = document.getElementById("count");
+const count   = document.getElementById("count");
 const sortSel = document.getElementById("sort");
-const chips = [...document.querySelectorAll(".chip")];
+const chips   = [...document.querySelectorAll(".chip")];
 let cat = "all";
 
-const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function render(){
   const term = q.value.trim().toLowerCase();
+  clearQ.classList.toggle("show", term.length > 0);
 
   let hits = APPS.filter(a => {
     if (cat !== "all" && a.cat !== cat) return false;
@@ -631,8 +999,12 @@ function render(){
   count.innerHTML = `Showing <b>${hits.length}</b> of ${APPS.length} apps · all open to new users`;
 
   if (!hits.length){
-    results.innerHTML = `<div class="empty"><strong>Nothing matches that yet</strong>
-      Try a broader word — notes, logs, security, writing, mood.</div>`;
+    results.innerHTML = `<div class="empty">
+      <strong>No apps match that yet</strong>
+      Try a broader word — notes, logs, security, writing, mood — or clear the filters.
+      <div><button class="btn btn-ghost btn-sm" type="button" id="resetAll">Show all 7 apps</button></div>
+    </div>`;
+    document.getElementById("resetAll").addEventListener("click", resetFilters);
     return;
   }
 
@@ -642,7 +1014,7 @@ function render(){
       return `<span class="tag${hit ? " hit" : ""}">${esc(tag)}</span>`;
     }).join("");
     return `<div class="row">
-      <div class="avatar" style="background:${a.color}">${esc(a.n[0])}</div>
+      <div class="avatar" style="background:${a.color}" aria-hidden="true">${esc(a.n[0])}</div>
       <div>
         <div class="co-name">${esc(a.n)}</div>
         <div class="co-meta">${esc(a.t)}</div>
@@ -650,36 +1022,86 @@ function render(){
       </div>
       <div class="stack">${tags}</div>
       <div class="go">
-        <a class="open-link" href="${a.url}" target="_blank" rel="noopener">Open app
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        <a class="open-link" href="${a.url}" target="_blank" rel="noopener">Open ${esc(a.n)}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
         </a>
       </div>
     </div>`;
   }).join("");
 }
 
+function resetFilters(){
+  q.value = "";
+  cat = "all";
+  chips.forEach(c => c.setAttribute("aria-pressed", String(c.dataset.cat === "all")));
+  sortSel.value = "featured";
+  render();
+  q.focus();
+}
+
 q.addEventListener("input", render);
 sortSel.addEventListener("change", render);
+clearQ.addEventListener("click", () => { q.value = ""; render(); q.focus(); });
 chips.forEach(chip => chip.addEventListener("click", () => {
   chips.forEach(c => c.setAttribute("aria-pressed", String(c === chip)));
   cat = chip.dataset.cat;
   render();
 }));
 document.addEventListener("keydown", e => {
-  if (e.key === "/" && document.activeElement !== q){ e.preventDefault(); q.focus(); }
+  if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)){
+    e.preventDefault(); q.focus();
+  }
 });
 render();
 
-/* ---------- marquee built from the same list ---------- */
+/* ---------- marquee, built from the same list ---------- */
 const track = document.getElementById("track");
 const strip = APPS.map(a => `<a href="${a.url}" target="_blank" rel="noopener">${esc(a.n)}</a>`).join("");
 track.innerHTML = strip + strip;
 
-/* ---------- nav border on scroll ---------- */
+/* ---------- mobile menu ---------- */
+const navToggle = document.getElementById("navToggle");
+const mobileMenu = document.getElementById("mobileMenu");
+
+function setMenu(open){
+  navToggle.setAttribute("aria-expanded", String(open));
+  mobileMenu.classList.toggle("open", open);
+  document.body.classList.toggle("menu-open", open);
+}
+navToggle.addEventListener("click", () => setMenu(navToggle.getAttribute("aria-expanded") !== "true"));
+mobileMenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setMenu(false)));
+document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
+window.addEventListener("resize", () => { if (window.innerWidth > 900) setMenu(false); });
+
+/* ---------- nav border + back to top ---------- */
 const nav = document.getElementById("nav");
-const onScroll = () => nav.classList.toggle("stuck", window.scrollY > 8);
+const toTop = document.getElementById("toTop");
+const onScroll = () => {
+  nav.classList.toggle("stuck", window.scrollY > 8);
+  toTop.classList.toggle("show", window.scrollY > 900);
+};
 window.addEventListener("scroll", onScroll, {passive:true});
 onScroll();
+toTop.addEventListener("click", () => window.scrollTo({top:0, behavior:"smooth"}));
+
+/* ---------- which section am I in ---------- */
+const navAnchors = [...document.querySelectorAll("#navLinks a")];
+const watched = navAnchors
+  .map(a => document.querySelector(a.getAttribute("href")))
+  .filter(Boolean);
+
+if (watched.length){
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      navAnchors.forEach(a => {
+        if (a.getAttribute("href") === "#" + en.target.id) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+    });
+  }, {rootMargin:"-45% 0px -50% 0px"});
+  watched.forEach(sec => spy.observe(sec));
+}
 
 /* ---------- scroll reveal ---------- */
 const io = new IntersectionObserver(entries => {
@@ -688,6 +1110,206 @@ const io = new IntersectionObserver(entries => {
 document.querySelectorAll(".rise").forEach((el, i) => {
   el.style.transitionDelay = `${(i % 3) * 70}ms`;
   io.observe(el);
+});
+
+/* ============================================================
+   LISTING FORM
+   ============================================================ */
+const form    = document.getElementById("listForm");
+const status  = document.getElementById("formStatus");
+const counter = document.getElementById("counter");
+const desc    = document.getElementById("f-desc");
+const copyBtn = document.getElementById("copyBtn");
+const submitBtn = document.getElementById("submitBtn");
+
+const FIELDS = [
+  { id:"f-name",  err:"e-name",  test:v => v.length >= 2 },
+  { id:"f-email", err:"e-email", test:v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) },
+  { id:"f-app",   err:"e-app",   test:v => v.length >= 1 },
+  { id:"f-url",   err:"e-url",   test:v => /^https?:\/\/.+\..+/i.test(v) },
+  { id:"f-cat",   err:"e-cat",   test:v => v !== "" },
+  { id:"f-desc",  err:"e-desc",  test:v => v.length >= 10 }
+];
+
+function updateCounter(){
+  const n = desc.value.length;
+  counter.textContent = `${n} / 160`;
+  counter.classList.toggle("over", n >= 160);
+}
+desc.addEventListener("input", updateCounter);
+updateCounter();
+
+function checkField(f, showError){
+  const el = document.getElementById(f.id);
+  const errEl = document.getElementById(f.err);
+  const ok = f.test(el.value.trim());
+  if (showError || errEl.classList.contains("show")){
+    errEl.classList.toggle("show", !ok);
+    el.setAttribute("aria-invalid", String(!ok));
+    if (ok) el.removeAttribute("aria-invalid");
+  }
+  return ok;
+}
+
+FIELDS.forEach(f => {
+  const el = document.getElementById(f.id);
+  el.addEventListener("blur", () => { if (el.value.trim()) checkField(f, true); });
+  el.addEventListener("input", () => checkField(f, false));
+  el.addEventListener("change", () => checkField(f, false));
+});
+
+function collect(){
+  const val = id => document.getElementById(id).value.trim();
+  return {
+    name: val("f-name"),
+    email: val("f-email"),
+    app: val("f-app"),
+    url: val("f-url"),
+    category: val("f-cat"),
+    description: val("f-desc"),
+    tags: val("f-tags"),
+    notes: val("f-notes")
+  };
+}
+
+function asPlainText(d){
+  const lines = [
+    "Grapevine listing request",
+    "",
+    `App name:      ${d.app}`,
+    `Link:          ${d.url}`,
+    `Category:      ${d.category}`,
+    `One sentence:  ${d.description}`
+  ];
+  if (d.tags)  lines.push(`Keywords:      ${d.tags}`);
+  lines.push("", `Submitted by:  ${d.name}`, `Reply to:      ${d.email}`);
+  if (d.notes) lines.push("", "Notes:", d.notes);
+  return lines.join("\n");
+}
+
+function setStatus(tone, html){
+  status.className = "form-status show";
+  if (tone === "error"){
+    status.style.background = "rgba(168,48,44,.06)";
+    status.style.borderColor = "rgba(168,48,44,.28)";
+  } else {
+    status.style.background = "";
+    status.style.borderColor = "";
+  }
+  status.innerHTML = html;
+  if (status.scrollIntoView) status.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+
+  /* bot filled the hidden trap — pretend all is well, send nothing */
+  if (document.getElementById("f-honey").value) return;
+
+  let firstBad = null;
+  FIELDS.forEach(f => { if (!checkField(f, true) && !firstBad) firstBad = f.id; });
+
+  if (firstBad){
+    setStatus("error", `<strong>A few fields still need filling</strong>
+      <p>The ones highlighted in red above are required. Fix those and send again.</p>`);
+    document.getElementById(firstBad).focus();
+    return;
+  }
+
+  const d = collect();
+  const body = asPlainText(d);
+
+  submitBtn.disabled = true;
+  copyBtn.disabled = true;
+  submitBtn.innerHTML = `<span class="spinner" aria-hidden="true"></span>Sending…`;
+  setStatus("ok", `<strong>Sending your request…</strong>
+    <p>Delivering to ${LISTING_EMAIL}. This takes a couple of seconds.</p>`);
+
+  try {
+    const res = await fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        _subject: `Grapevine listing request — ${d.app}`,
+        _template: "table",
+        _captcha: "false",
+        _replyto: d.email,
+        "App name": d.app,
+        "Link": d.url,
+        "Category": d.category,
+        "One sentence": d.description,
+        "Search keywords": d.tags || "—",
+        "Submitted by": d.name,
+        "Reply to": d.email,
+        "Notes": d.notes || "—"
+      })
+    });
+
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    setStatus("ok", `<strong>Sent. It's in the inbox.</strong>
+      <p>Thanks for sending <b>${esc(d.app)}</b> over. We read every request and reply to ${esc(d.email)} within a few days.
+      If your app is live and working, it goes on the vine — there's no audience minimum to clear.</p>
+      <button class="mini" type="button" id="sendAnother">Send another app</button>`);
+
+    document.getElementById("sendAnother").addEventListener("click", () => {
+      form.reset();
+      updateCounter();
+      document.querySelectorAll(".err.show").forEach(el => el.classList.remove("show"));
+      document.querySelectorAll("[aria-invalid]").forEach(el => el.removeAttribute("aria-invalid"));
+      status.className = "form-status";
+      document.getElementById("f-name").focus();
+    });
+
+    form.reset();
+    updateCounter();
+
+  } catch (err) {
+    /* service unreachable or blocked — hand the visitor their mail app so nothing is lost */
+    const href = `mailto:${LISTING_EMAIL}?subject=${encodeURIComponent("Grapevine listing request — " + d.app)}&body=${encodeURIComponent(body)}`;
+    setStatus("error", `<strong>That didn't send</strong>
+      <p>Something blocked the connection — often an ad blocker or a dropped network. Your details are safe below. Send them by email instead and they'll reach us just the same.</p>
+      <a class="mini" href="${href}">Send it from my email app</a>
+      <button class="mini" type="button" id="copyFromStatus">Copy the details</button>
+      <pre>${esc(body)}</pre>`);
+    document.getElementById("copyFromStatus").addEventListener("click", () => copyText(body, "copyFromStatus"));
+  } finally {
+    submitBtn.disabled = false;
+    copyBtn.disabled = false;
+    submitBtn.textContent = "Send listing request";
+  }
+});
+
+async function copyText(text, btnId){
+  const btn = document.getElementById(btnId);
+  const original = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.textContent = "Copied";
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); btn.textContent = "Copied"; }
+    catch { btn.textContent = "Press Ctrl/Cmd + C"; }
+    document.body.removeChild(ta);
+  }
+  setTimeout(() => { btn.textContent = original; }, 2200);
+}
+
+copyBtn.addEventListener("click", () => {
+  const d = collect();
+  const text = `${asPlainText(d)}\n\nSend to: ${LISTING_EMAIL}`;
+  copyText(text, "copyBtn");
+  status.className = "form-status show";
+  status.style.background = "";
+  status.style.borderColor = "";
+  status.innerHTML = `<strong>Copied to your clipboard</strong>
+    <p>Paste it into an email to <a href="mailto:${LISTING_EMAIL}">${LISTING_EMAIL}</a> and send. Blank fields will show as blank — fill them in before sending if you can.</p>
+    <pre>${esc(text)}</pre>`;
 });
 </script>
 </body>
