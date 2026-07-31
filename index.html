@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Grapevine — the directory of apps looking for their next customers</title>
-<meta name="description" content="A free directory for small software. Seven apps are live and open to new users. Browse by what you need, or fill in the form to get your own app listed — no audience required.">
+<meta name="description" content="A free directory for small software. Eight apps are live and open to new users. Browse by what you need, or fill in the form to get your own app listed — no audience required.">
 <meta name="theme-color" content="#E7E3EC">
 <meta property="og:title" content="Grapevine — apps looking for their next customers">
-<meta property="og:description" content="A free directory for small software. Browse seven live apps, or get yours listed in a minute. No audience required.">
+<meta property="og:description" content="A free directory for small software. Browse eight live apps, or get yours listed in a minute. No audience required.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -215,6 +215,13 @@ p{margin:0}
   font-family:var(--serif);font-size:20px;font-weight:700;color:#fff;flex:none
 }
 .co-name{font-weight:600;letter-spacing:-.01em;font-size:17px}
+.name-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.avatar.brand-mark{background:#111827;padding:0;overflow:hidden}
+.avatar.brand-mark img{width:100%;height:100%;object-fit:contain}
+.first-pour-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  padding:3px 8px;border-radius:var(--r-pill);background:var(--ink);color:var(--bloom)
+}
 .co-meta{font-size:14px;color:var(--muted)}
 .stack{display:flex;flex-wrap:wrap;gap:6px}
 .tag{
@@ -249,6 +256,47 @@ p{margin:0}
 .track{display:flex;gap:52px;width:max-content;animation:slide 38s linear infinite}
 .track a{font-family:var(--serif);font-size:23px;font-weight:600;color:rgba(42,27,51,.36);white-space:nowrap;text-decoration:none;transition:color .18s ease}
 .track a:hover{color:var(--berry)}
+.track a.first-pour{
+  display:flex;align-items:center;background:#111827;border-radius:11px;
+  padding:10px 18px;transition:background .18s ease
+}
+.track a.first-pour img{height:22px;width:auto}
+.track a.first-pour:hover{background:#1d2637}
+.proof .uncorked{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--berry);margin:0 0 10px
+}
+.proof .uncorked-note{max-width:640px;margin:0 auto;font-size:14px;color:var(--muted)}
+.proof .uncorked-note b{color:var(--ink);font-weight:600}
+
+/* the first business collaboration — the one loud thing on the page */
+.collab{
+  display:grid;grid-template-columns:minmax(0,320px) 1fr;gap:32px;align-items:center;
+  text-align:left;margin-top:34px;padding:26px;
+  background:var(--paper);border:1px solid var(--line-soft);
+  border-radius:var(--r-lg);box-shadow:var(--shadow)
+}
+.collab-plate{
+  display:grid;place-items:center;background:#111827;border-radius:var(--r-md);
+  padding:34px 28px;transition:transform .25s ease
+}
+.collab-plate:hover{transform:translateY(-3px)}
+.collab-plate img{width:100%;height:auto}
+.proof .collab-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--berry);margin:0 0 12px
+}
+.collab-copy h3{
+  font-family:var(--serif);font-size:25px;line-height:1.25;
+  letter-spacing:-.015em;margin:0 0 12px;color:var(--ink)
+}
+.proof .collab-copy p{font-size:15px;color:var(--muted);margin:0 0 18px}
+.collab-link{
+  display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+  font-size:14px;font-weight:600;padding:11px 18px;border-radius:var(--r-pill);
+  border:1px solid var(--line);transition:background .15s ease,color .15s ease,border-color .15s ease
+}
+.collab-link:hover{background:var(--ink);border-color:var(--ink);color:var(--bloom)}
 .marquee:hover .track{animation-play-state:paused}
 @keyframes slide{to{transform:translateX(-50%)}}
 
@@ -458,6 +506,9 @@ footer{padding:80px 0 40px}
   .nav-toggle{display:inline-flex}
   .stats{grid-template-columns:repeat(2,1fr)}
   .foot-grid{grid-template-columns:1fr 1fr}
+  .collab{grid-template-columns:1fr;gap:24px;text-align:center}
+  .collab-plate{width:100%;max-width:420px;margin:0 auto}
+  .collab-copy .collab-link{margin:0 auto}
   .row{grid-template-columns:46px 1fr;gap:14px}
   .row .stack{grid-column:1/-1}
   .row .go{grid-column:1/-1}
@@ -474,6 +525,9 @@ footer{padding:80px 0 40px}
   .foot-grid{grid-template-columns:1fr}
   #sort{margin-left:0;width:100%}
   .cta{padding:56px 24px}
+  .collab{padding:18px}
+  .collab-plate{padding:26px 20px}
+  .collab-copy h3{font-size:21px}
   .quote-solo{padding:38px 24px}
   .hint{display:none}
   .grid-2{grid-template-columns:1fr;gap:0}
@@ -529,7 +583,7 @@ footer{padding:80px 0 40px}
 </header>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#finder">Browse apps <span>7 live</span></a>
+  <a href="#finder">Browse apps <span>8 live</span></a>
   <a href="#how">How it works <span>3 steps</span></a>
   <a href="#list">Get listed <span>Free</span></a>
   <a href="#faq">FAQ <span>5 answers</span></a>
@@ -544,10 +598,10 @@ footer{padding:80px 0 40px}
     <div class="shell">
       <p class="eyebrow">Free directory for small software</p>
       <h1>Looking for customers for your software?<br><span class="accent">You found the right place</span>.</h1>
-      <p class="lede">Grapevine puts small software in front of the people already searching for it. Seven apps are listed so far. Browse them below, or fill in the form to add yours — you don't need an audience to get in.</p>
+      <p class="lede">Grapevine puts small software in front of the people already searching for it. Eight apps are listed so far. Browse them below, or fill in the form to add yours — you don't need an audience to get in.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#list">Get your app listed</a>
-        <a class="btn btn-ghost" href="#finder">Browse the seven apps</a>
+        <a class="btn btn-ghost" href="#finder">Browse the eight apps</a>
       </div>
       <p class="note">Free to list · free to browse · no account needed</p>
 
@@ -567,12 +621,13 @@ footer{padding:80px 0 40px}
 
           <div class="facets" id="facets">
             <span class="facet-label" id="catLabel">Category</span>
-            <button class="chip" aria-pressed="true" data-cat="all">All 7</button>
+            <button class="chip" aria-pressed="true" data-cat="all">All 8</button>
             <button class="chip" aria-pressed="false" data-cat="Security">Security</button>
             <button class="chip" aria-pressed="false" data-cat="Productivity">Productivity</button>
             <button class="chip" aria-pressed="false" data-cat="Writing">Writing</button>
             <button class="chip" aria-pressed="false" data-cat="Branding">Branding</button>
             <button class="chip" aria-pressed="false" data-cat="Wellbeing">Wellbeing</button>
+            <button class="chip" aria-pressed="false" data-cat="Games">Games</button>
             <select id="sort" aria-label="Sort the directory">
               <option value="featured">Featured order</option>
               <option value="az">Name A–Z</option>
@@ -593,7 +648,24 @@ footer{padding:80px 0 40px}
 
   <!-- ============ PROOF MARQUEE ============ -->
   <section class="proof" id="proof">
-    <div class="shell"><p>Live in the directory right now</p></div>
+    <div class="shell">
+      <p class="uncorked">Uncorked</p>
+      <p class="uncorked-note">The projects that decided to go public — built, hosted, and open to anyone right now.</p>
+
+      <div class="collab rise">
+        <a class="collab-plate" href="https://fumble.nz/" target="_blank" rel="noopener" aria-label="Open fumble.nz">
+          <img id="fumbleLogo" src="data:image/png;base64,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" alt="Fumble" width="378" height="109">
+        </a>
+        <div class="collab-copy">
+          <p class="collab-eyebrow">First business collaboration</p>
+          <h3>Fumble is the first outside business to collaborate with Grapevine.</h3>
+          <p>A better interface for browsing game deals — real filters, real sorting, and price rules, on a storefront that never offered them. Built in New Zealand by Charlie Renton-Deans, and the first pour on the vine.</p>
+          <a class="collab-link" href="https://fumble.nz/" target="_blank" rel="noopener">Open fumble.nz
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
     <div class="marquee">
       <div class="track" id="track"></div>
     </div>
@@ -614,7 +686,7 @@ footer{padding:80px 0 40px}
           <div>
             <h3>Search by the job, not the category</h3>
             <p>Type what you're actually trying to do — sort my notes, read my logs, protect my agents — and the directory filters as you type. Matching words light up on the app that handles them.</p>
-            <div class="step-extra"><span class="pill">7 apps</span><span class="pill">6 categories</span><span class="pill">Live search</span></div>
+            <div class="step-extra"><span class="pill">8 apps</span><span class="pill">7 categories</span><span class="pill">Live search</span></div>
           </div>
         </article>
 
@@ -643,8 +715,8 @@ footer{padding:80px 0 40px}
   <section class="section section-tight">
     <div class="shell">
       <div class="stats rise">
-        <div class="stat"><b>7</b><span>apps live in the directory</span></div>
-        <div class="stat"><b>6</b><span>categories, from security to wellbeing</span></div>
+        <div class="stat"><b>8</b><span>apps live in the directory</span></div>
+        <div class="stat"><b>7</b><span>categories, from security to games</span></div>
         <div class="stat"><b>0</b><span>followers needed to get listed</span></div>
         <div class="stat"><b>0</b><span>sales calls to try any of it</span></div>
       </div>
@@ -833,7 +905,11 @@ footer{padding:80px 0 40px}
         </details>
         <details>
           <summary>What's actually in the directory?</summary>
-          <p>Seven working apps: Brandofme.ai, Soul Weather Station, Axiom, Brain Dump, tracelight.ai, Immune and Cipherscope. Each one is hosted and open right now — the links go straight to the live product.</p>
+          <p>Eight working apps: Fumble, Brandofme.ai, Soul Weather Station, Axiom, Brain Dump, tracelight.ai, Immune and Cipherscope. Each one is hosted and open right now — the links go straight to the live product.</p>
+        </details>
+        <details>
+          <summary>What does &ldquo;uncorked&rdquo; mean?</summary>
+          <p>Uncorked is our word for a project that decided to go public — built, hosted, and open to anyone, with nothing sitting behind a waitlist. Every app in the directory is uncorked. The first pour is <a href="https://fumble.nz/" target="_blank" rel="noopener">Fumble</a>, the first outside business to collaborate with Grapevine.</p>
         </details>
         <details>
           <summary>Does it cost anything?</summary>
@@ -845,7 +921,7 @@ footer{padding:80px 0 40px}
         </details>
         <details>
           <summary>Who runs Grapevine?</summary>
-          <p>Grapevine is run by Ghokkul M. The seven starter apps were built by Ninth Sun Studios in partnership with Grapevine. For anything not answered here, write to helloghokkul@gmail.com.</p>
+          <p>Grapevine is run by Ghokkul M. The seven starter apps were built by Ninth Sun Studios in partnership with Grapevine. <a href="https://fumble.nz/" target="_blank" rel="noopener">Fumble</a>, built by Charlie Renton-Deans in New Zealand, is the first outside business to join the vine — the first pour. For anything not answered here, write to helloghokkul@gmail.com.</p>
         </details>
       </div>
     </div>
@@ -866,7 +942,7 @@ footer{padding:80px 0 40px}
           <a class="btn btn-primary" href="#list">Get your app listed</a>
           <a class="btn btn-ghost" href="#finder">Browse the directory</a>
         </div>
-        <p class="note">7 apps · free to browse · no account needed</p>
+        <p class="note">8 apps · free to browse · no account needed</p>
       </div>
     </div>
   </section>
@@ -904,6 +980,7 @@ footer{padding:80px 0 40px}
           <li><a href="https://ghokkul.github.io/tracelight.ai/#demo" target="_blank" rel="noopener">tracelight.ai</a></li>
           <li><a href="https://ghokkul.github.io/immune.ai/" target="_blank" rel="noopener">Immune</a></li>
           <li><a href="https://ghokkul.github.io/cipherscope-cybersecurity-browser/" target="_blank" rel="noopener">Cipherscope</a></li>
+          <li><a href="https://fumble.nz/" target="_blank" rel="noopener">Fumble</a></li>
         </ul>
       </div>
       <div class="foot">
@@ -918,7 +995,7 @@ footer{padding:80px 0 40px}
     </div>
     <div class="foot-base">
       <span>© 2026 Grapevine — apps by Ghokkul M</span>
-      <span>7 apps listed</span>
+      <span>8 apps listed</span>
     </div>
   </div>
 </footer>
@@ -931,7 +1008,18 @@ footer{padding:80px 0 40px}
 /* ============================================================
    THE APPS  —  add a new object here when a listing is accepted
    ============================================================ */
+/* One embedded copy of the Fumble wordmark, reused by the directory row
+   and the marquee so the file stays self-contained. */
+const FUMBLE_LOGO = document.getElementById("fumbleLogo").src;
+
+/* The F monogram, used as Fumble's mark in the directory list. */
+const FUMBLE_MARK = "data:image/png;base64,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";
+
 const APPS = [
+  /* The first pour — the first outside business to collaborate with Grapevine.
+     `first:true` draws the badge in the directory and the marquee. */
+  { n:"Fumble", t:"A better interface for browsing game deals", cat:"Games",
+    url:"https://fumble.nz/", tags:["games","deals","game store","price filter"], color:"#111827", first:true, logo:true },
   { n:"Brandofme.ai", t:"Turn your name into a brand", cat:"Branding",
     url:"https://brandofme.ai/", tags:["personal brand","naming","identity"], color:"#8A2B52" },
   { n:"Soul Weather Station", t:"A daily forecast for how you're doing", cat:"Wellbeing",
@@ -989,7 +1077,8 @@ function render(){
     return a.n.toLowerCase().includes(term)
         || a.t.toLowerCase().includes(term)
         || a.cat.toLowerCase().includes(term)
-        || a.tags.some(tag => tag.includes(term));
+        || a.tags.some(tag => tag.includes(term))
+        || (a.first && "first pour uncorked first business collaboration".includes(term));
   });
 
   const mode = sortSel.value;
@@ -1002,7 +1091,7 @@ function render(){
     results.innerHTML = `<div class="empty">
       <strong>No apps match that yet</strong>
       Try a broader word — notes, logs, security, writing, mood — or clear the filters.
-      <div><button class="btn btn-ghost btn-sm" type="button" id="resetAll">Show all 7 apps</button></div>
+      <div><button class="btn btn-ghost btn-sm" type="button" id="resetAll">Show all ${APPS.length} apps</button></div>
     </div>`;
     document.getElementById("resetAll").addEventListener("click", resetFilters);
     return;
@@ -1014,9 +1103,14 @@ function render(){
       return `<span class="tag${hit ? " hit" : ""}">${esc(tag)}</span>`;
     }).join("");
     return `<div class="row">
-      <div class="avatar" style="background:${a.color}" aria-hidden="true">${esc(a.n[0])}</div>
+      ${a.logo
+        ? `<div class="avatar brand-mark" aria-hidden="true"><img src="${FUMBLE_MARK}" alt=""></div>`
+        : `<div class="avatar" style="background:${a.color}" aria-hidden="true">${esc(a.n[0])}</div>`}
       <div>
-        <div class="co-name">${esc(a.n)}</div>
+        <div class="name-line">
+          <span class="co-name">${esc(a.n)}</span>
+          ${a.first ? `<span class="first-pour-tag">First business collaboration</span>` : ""}
+        </div>
         <div class="co-meta">${esc(a.t)}</div>
         <div class="status"><span class="dot"></span>Open to new users</div>
       </div>
@@ -1056,7 +1150,10 @@ render();
 
 /* ---------- marquee, built from the same list ---------- */
 const track = document.getElementById("track");
-const strip = APPS.map(a => `<a href="${a.url}" target="_blank" rel="noopener">${esc(a.n)}</a>`).join("");
+const strip = APPS.map(a => a.logo
+  ? `<a class="first-pour" href="${a.url}" target="_blank" rel="noopener"><img src="${FUMBLE_LOGO}" alt="${esc(a.n)}"></a>`
+  : `<a href="${a.url}" target="_blank" rel="noopener">${esc(a.n)}</a>`
+).join("");
 track.innerHTML = strip + strip;
 
 /* ---------- mobile menu ---------- */
